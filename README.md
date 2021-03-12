@@ -1,15 +1,15 @@
-= H5View
+# H5View
 
 _A small app for viewing h5 files in a simple and clean way._
 
-== Run
+## Run
 
  - Clone this repo.
  - Run `setup_venv.ps1` to create the virtual env.
  - Run `ui2py.ps1` to convert the ui files.
  - Run `python -m h5view` to run the app.
 
-== Develop
+## Develop
 
  - Clone this repo.
  - Run `setup_venv.ps1` to create the virtual env.
