@@ -65,7 +65,7 @@ class PixmapWidget(QtWidgets.QWidget):
         if dataset.ndim == 1:
             self._rows = dataset.size
         elif dataset.ndim > 1:
-            self._rows, self._cols = dataset.shape[-2:]
+            self._cols, self._rows = dataset.shape[-2:]
         self._region = (0,) * len(dataset.shape[:-2])
         self.repaint()
 
@@ -115,13 +115,13 @@ class PixmapWidget(QtWidgets.QWidget):
             dtypeInfo = np.iinfo(self._dataset.dtype)
             data -= dtypeInfo.min
             data /= dtypeInfo.max
-        data = (data * 255).T.copy(order="C").astype(np.uint8)
+        data = (data * 255).copy(order="C").astype(np.uint8)
         assert data.shape == (self._cols, self._rows)
         return QtGui.QImage(
             data.tobytes(),
-            self._cols,
             self._rows,
             self._cols,
+            self._rows,
             QtGui.QImage.Format_Grayscale8,
         )
 
@@ -247,8 +247,11 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._showIndex(idx)
 
     def _onUpdateShowIndex(self) -> None:
-        if self.treeView.selectionModel() is not None:
-            self._showIndex(self.treeView.selectionModel().currentIndex())
+        if (
+            self.treeView.selectionModel() is not None
+            and len(self.treeView.selectionModel().selectedIndexes()) > 0
+        ):
+            self._showIndex(self.treeView.selectionModel().selectedIndexes()[0])
 
     def open(self, fname: Union[str, bytes, os.PathLike]) -> None:
         self._settings.setValue("openDir", str(os.path.dirname(fname)))
@@ -355,13 +358,15 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.spinContainer.layout().insertWidget(len(self._regionSpins) * 2, label)
 
             spin = QtWidgets.QSpinBox(self)
-            spin.setRange(0, group_or_dataset.shape[len(self._regionSpins)] - 1)
             spin.setSizePolicy(sizePolicy)
             spin.valueChanged.connect(self._onRegionChanged)
             self.spinContainer.layout().insertWidget(
                 len(self._regionSpins) * 2 + 1, spin
             )
             self._regionSpins.append(spin)
+
+        for i, spin in enumerate(self._regionSpins):
+            spin.setRange(0, group_or_dataset.shape[i] - 1)
 
         # Remember the spacer!
         self.spinContainer.setVisible(self.spinContainer.layout().count() != 1)
