@@ -5,11 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: Module",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}\\h5view\\h5view.py",
-            "console": "integratedTerminal",
+            "module": "h5view",
             "preLaunchTask": "ui2py"
         }
     ]

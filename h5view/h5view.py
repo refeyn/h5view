@@ -213,6 +213,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._h5file: Optional[h5py.File] = None
         self._viewWidget: Optional[QtWidgets.QWidget] = None
         self._regionSpins: List[QtWidgets.QSpinBox] = []
+        self._settings = QtCore.QSettings("Refeyn Ltd", "h5view")
 
         self.valueImageView = PixmapWidget(self)
         self.valueImageView.setAutoscale(self.actionAutoscale_Image.isChecked())
@@ -236,7 +237,8 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _onOpen(self) -> None:
         fname, _ = QtWidgets.QFileDialog.getOpenFileName(
-            filter="H5 files (*.h5 *.mp *.mp.af);;All files (*)"
+            dir=str(self._settings.value("openDir", ".")),
+            filter="H5 files (*.h5 *.mp *.mp.af);;All files (*)",
         )
         if fname:
             self.open(fname)
@@ -249,6 +251,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self._showIndex(self.treeView.selectionModel().currentIndex())
 
     def open(self, fname: Union[str, bytes, os.PathLike]) -> None:
+        self._settings.setValue("openDir", str(os.path.dirname(fname)))
         self._h5file = h5py.File(fname)
         self._populateTreeView()
 
@@ -256,7 +259,11 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         model = QtGui.QStandardItemModel()
         self._recursivePopulate(self._h5file, model.invisibleRootItem())
         self.treeView.setModel(model)
+        self.treeView.selectionModel().select(
+            model.index(0, 0), QtCore.QItemSelectionModel.SelectCurrent
+        )
         self.treeView.selectionModel().currentChanged.connect(self._onShowIndex)
+        self._showIndex(model.index(0, 0))
 
     def _recursivePopulate(
         self,
@@ -371,17 +378,3 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.valueTableView.model().setRegion(region)
         elif self._viewWidget is self.valueImageView:
             self.valueImageView.setRegion(region)
-
-
-if __name__ == "__main__":
-    import sys
-
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
-
-    app = QtWidgets.QApplication(sys.argv)
-    mw = H5ViewWindow(None)
-    mw.show()
-    if len(sys.argv) > 1:
-        mw.open(sys.argv[1])
-    app.exec_()
