@@ -253,10 +253,11 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ):
             self._showIndex(self.treeView.selectionModel().selectedIndexes()[0])
 
-    def open(self, fname: Union[str, bytes, os.PathLike]) -> None:
+    def open(self, fname: Union[str, os.PathLike]) -> None:
         self._settings.setValue("openDir", str(os.path.dirname(fname)))
         self._h5file = h5py.File(fname)
         self._populateTreeView()
+        self.setWindowTitle(f"H5View - {os.path.abspath(fname)}")
 
     def _populateTreeView(self) -> None:
         model = QtGui.QStandardItemModel()
