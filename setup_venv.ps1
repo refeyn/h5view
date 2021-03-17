@@ -21,7 +21,7 @@ else {
 "Create virtual environment"
 python -m venv $venvPath
 "Activate"
-Invoke-Expression "& '$venvPath\Scripts\Activate.ps1'"
+.\activate_venv.ps1
 "Upgrade pip"
 python -m pip install --upgrade pip
 "Install requirements from requirements.txt"

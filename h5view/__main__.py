@@ -2,7 +2,7 @@ import sys
 
 from PySide2 import QtCore, QtWidgets
 
-from h5view.h5view import H5ViewWindow
+from h5view.app import H5ViewWindow
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)

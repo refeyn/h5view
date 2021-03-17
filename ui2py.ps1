@@ -1,4 +1,5 @@
 $convertDir = "h5view"
+./activate_venv.ps1
 python -c @"
 import pathlib, subprocess
 for uipath in pathlib.Path().glob('$convertDir/**/*.ui'):
