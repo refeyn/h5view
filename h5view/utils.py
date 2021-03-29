@@ -12,7 +12,7 @@ def formatAsStr(value: Any) -> str:
             singlevalue = value[()]
             if isinstance(singlevalue, bytes):
                 try:
-                    singlevalue = singlevalue.decode()
+                    return singlevalue.decode()
                 except ValueError:
                     pass
             return str(singlevalue)
@@ -20,6 +20,11 @@ def formatAsStr(value: Any) -> str:
             return (
                 f"Dataset {value.name!r} {typeAndShapeAsStr(value.dtype, value.shape)}"
             )
+    elif isinstance(value, bytes):
+        try:
+            return value.decode()
+        except ValueError:
+            return str(value)
     else:
         return str(value)
 

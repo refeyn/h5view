@@ -13,7 +13,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__(parent=parent)
         self.setupUi(self)
         self._h5file: Optional[h5py.File] = None
-        self._viewWidget: Optional[QtWidgets.QWidget] = None
+        self._viewWidget: QtWidgets.QWidget = self.valueTableView
         self._regionSpins: List[QtWidgets.QSpinBox] = []
         self._settings = QtCore.QSettings("Refeyn Ltd", "h5view")
 
@@ -57,9 +57,13 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def open(self, fname: Union[str, os.PathLike]) -> None:
         self._settings.setValue("openDir", str(os.path.dirname(fname)))
-        self._h5file = h5py.File(fname)
-        self._populateTreeView()
-        self.setWindowTitle(f"H5View - {os.path.abspath(fname)}")
+        try:
+            self._h5file = h5py.File(fname)
+        except OSError as e:
+            QtWidgets.QMessageBox.critical(self, "Could not open file", str(e))
+        else:
+            self._populateTreeView()
+            self.setWindowTitle(f"H5View - {os.path.abspath(fname)}")
 
     def _populateTreeView(self) -> None:
         model = QtGui.QStandardItemModel()

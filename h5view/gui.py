@@ -6,6 +6,8 @@ import h5py
 import numpy as np
 from PySide2 import QtCore, QtGui, QtWidgets
 
+from h5view import utils
+
 
 class DatasetModel(QtCore.QAbstractTableModel):
     def __init__(self, dataset: h5py.Dataset):
@@ -44,7 +46,7 @@ class DatasetModel(QtCore.QAbstractTableModel):
             return None
         if role == QtCore.Qt.DisplayRole:
             didx = self._region + (index.row(), index.column())
-            return str(self._dataset[didx[: self._dataset.ndim]])
+            return utils.formatAsStr(self._dataset[didx[: self._dataset.ndim]])
 
 
 class PixmapWidget(QtWidgets.QWidget):
