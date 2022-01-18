@@ -40,7 +40,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _onOpen(self) -> None:
         fname, _ = QtWidgets.QFileDialog.getOpenFileName(
             dir=str(self._settings.value("openDir", ".")),
-            filter="H5 files (*.h5 *.mp *.mp.af);;All files (*)",
+            filter="H5 files (*.h5 *.mp *.mpr *.mp.af *.aflog);;All files (*)",
         )
         if fname:
             self.open(fname)
