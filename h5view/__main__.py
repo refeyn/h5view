@@ -1,6 +1,6 @@
 import sys
 
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from h5view.app import H5ViewWindow
 
@@ -12,4 +12,4 @@ mw = H5ViewWindow(None)
 mw.show()
 if len(sys.argv) > 1:
     mw.open(sys.argv[1])
-app.exec_()
+app.exec()

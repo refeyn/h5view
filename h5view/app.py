@@ -1,8 +1,8 @@
 import os
-from typing import Union, Optional, List
+from typing import List, Optional, Union, cast
 
 import h5py
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from h5view import gui, utils
 from h5view.ui.app import Ui_MainWindow
@@ -39,6 +39,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _onOpen(self) -> None:
         fname, _ = QtWidgets.QFileDialog.getOpenFileName(
+            parent=self,
             dir=str(self._settings.value("openDir", ".")),
             filter="H5 files (*.h5 *.mp *.mpr *.mp.af *.aflog);;All files (*)",
         )
@@ -80,11 +81,13 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         group_or_dataset: Union[h5py.Group, h5py.Dataset],
         item: QtGui.QStandardItem,
     ) -> None:
-        item.setData(group_or_dataset, QtCore.Qt.UserRole)
+        item.setData(group_or_dataset, cast(int, QtCore.Qt.UserRole))
         if isinstance(group_or_dataset, h5py.Group):
             for name, sub_grp_or_ds in group_or_dataset.items():
                 subitem = QtGui.QStandardItem(name)
-                subitem.setFlags(subitem.flags() & ~QtCore.Qt.ItemIsEditable)
+                subitem.setFlags(
+                    subitem.flags() & ~QtCore.Qt.ItemIsEditable  # type:ignore[operator]
+                )
                 self._recursivePopulate(sub_grp_or_ds, subitem)
                 item.appendRow(subitem)
         elif isinstance(group_or_dataset, h5py.Dataset):
@@ -93,16 +96,25 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             raise RuntimeError()
 
     def _showIndex(self, idx: QtCore.QModelIndex) -> None:
-        group_or_dataset = idx.data(QtCore.Qt.UserRole)
+        group_or_dataset = idx.data(cast(int, QtCore.Qt.UserRole))
         self.pathLabel.setText(group_or_dataset.name)
 
         attrModel = QtGui.QStandardItemModel()
-        for i, (name, value) in enumerate(group_or_dataset.attrs.items()):
+        for i, (name, value) in enumerate(sorted(group_or_dataset.attrs.items())):
             attrModel.setItem(i, 0, QtGui.QStandardItem(name))
             attrModel.setItem(i, 1, QtGui.QStandardItem(utils.formatAsStr(value)))
         self.attrTableView.setModel(attrModel)
         self.attrTableView.resizeColumnsToContents()
         self.tabWidget.setTabText(1, f"Attributes ({len(group_or_dataset.attrs)})")
+
+        metadataModel = QtGui.QStandardItemModel()
+        for i, (name, value) in enumerate(
+            sorted(utils.metadataFor(group_or_dataset).items())
+        ):
+            metadataModel.setItem(i, 0, QtGui.QStandardItem(name))
+            metadataModel.setItem(i, 1, QtGui.QStandardItem(utils.formatAsStr(value)))
+        self.metadataTableView.setModel(metadataModel)
+        self.metadataTableView.resizeColumnsToContents()
 
         viewWidget = None
         regionSpins = 0
@@ -168,7 +180,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
             spin = QtWidgets.QSpinBox(self)
             spin.setSizePolicy(sizePolicy)
-            spin.valueChanged.connect(self._onRegionChanged)
+            spin.valueChanged.connect(self._onRegionChanged)  # type: ignore[attr-defined]
             self.spinContainer.layout().insertWidget(
                 len(self._regionSpins) * 2 + 1, spin
             )

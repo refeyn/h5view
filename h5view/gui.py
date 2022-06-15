@@ -1,15 +1,17 @@
 import math
 import random
-from typing import Tuple, Any, Optional, List
+from typing import Any, List, Optional, Tuple, Union, cast
 
 import h5py
 import numpy as np
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from h5view import utils
 
 
 class DatasetModel(QtCore.QAbstractTableModel):
+    dataChanged: QtCore.Signal
+
     def __init__(self, dataset: h5py.Dataset):
         super().__init__()
         self._dataset = dataset
@@ -20,12 +22,22 @@ class DatasetModel(QtCore.QAbstractTableModel):
             self._rows, self._cols = dataset.shape[-2:]
         self._region = (0,) * len(dataset.shape[:-2])
 
-    def rowCount(self, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> int:
+    def rowCount(
+        self,
+        parent: Union[
+            QtCore.QModelIndex, QtCore.QPersistentModelIndex
+        ] = QtCore.QModelIndex(),
+    ) -> int:
         if parent.isValid():
             return 0
         return self._rows
 
-    def columnCount(self, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> int:
+    def columnCount(
+        self,
+        parent: Union[
+            QtCore.QModelIndex, QtCore.QPersistentModelIndex
+        ] = QtCore.QModelIndex(),
+    ) -> int:
         if parent.isValid():
             return 0
         return self._cols
@@ -41,7 +53,11 @@ class DatasetModel(QtCore.QAbstractTableModel):
         self._region = region
         self.dataChanged.emit(self.index(0, 0), self.index(self._rows, self._cols), [])
 
-    def data(self, index: QtCore.QModelIndex, role: int = QtCore.Qt.DisplayRole) -> Any:
+    def data(
+        self,
+        index: Union[QtCore.QModelIndex, QtCore.QPersistentModelIndex],
+        role: int = cast(int, QtCore.Qt.DisplayRole),
+    ) -> Any:
         if not index.isValid():
             return None
         if role == QtCore.Qt.DisplayRole:
@@ -128,6 +144,7 @@ class PixmapWidget(QtWidgets.QWidget):
 def columnWidthRandomized(widget: QtWidgets.QTableView, column: int) -> float:
     model = widget.model()
     delegate = widget.itemDelegate()
+    assert isinstance(delegate, QtWidgets.QStyledItemDelegate)
     widths: List[float] = []
     for _ in range(10):
         index = model.index(random.randrange(model.rowCount()), column)
@@ -141,6 +158,7 @@ def columnWidthRandomized(widget: QtWidgets.QTableView, column: int) -> float:
 def columnWidthFromDtype(
     widget: QtWidgets.QTableView, dtype: np.dtype
 ) -> Optional[float]:
+    info: Union[np.finfo, np.iinfo]
     if np.issubdtype(dtype, np.floating):
         info = np.finfo(dtype)
         digits = math.ceil(info.bits * math.log10(2))
@@ -156,8 +174,9 @@ def columnWidthFromDtype(
         return None
     model = widget.model()
     delegate = widget.itemDelegate()
+    assert isinstance(delegate, QtWidgets.QStyledItemDelegate)
     index = model.index(0, 0)
     style = QtWidgets.QStyleOptionViewItem()
     delegate.initStyleOption(style, index)
-    fontMetrics = QtGui.QFontMetrics(style.font)
+    fontMetrics = QtGui.QFontMetrics(style.font)  # type: ignore[attr-defined]
     return float(fontMetrics.horizontalAdvance("8" * digits)) + 12

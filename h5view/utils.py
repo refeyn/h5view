@@ -1,4 +1,4 @@
-from typing import Tuple, Any
+from typing import Any, Mapping, Tuple, Union
 
 import h5py
 import numpy as np
@@ -49,3 +49,18 @@ def typeAndShapeAsStr(dtype: np.dtype, shape: Tuple[int, ...]) -> str:
         return typeAsStr(dtype)
     else:
         return f"{typeAsStr(dtype)}{shape}"
+
+
+def metadataFor(obj: Union[h5py.Group, h5py.Dataset]) -> Mapping[str, Any]:
+    if isinstance(obj, h5py.Group):
+        return {}
+    else:
+        return {
+            "Shape": obj.shape,
+            "DType": obj.dtype,
+            "NBytes": obj.nbytes,
+            "Max shape": obj.maxshape,
+            "Chunk shape": obj.chunks,
+            "Compression": obj.compression,
+            "Compression opts": obj.compression_opts,
+        }
