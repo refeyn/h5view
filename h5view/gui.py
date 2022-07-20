@@ -124,12 +124,18 @@ class PixmapWidget(QtWidgets.QWidget):
         )
         data: np.ndarray = self._dataset[self._region].astype(float)
         if self._autoscale:
-            data -= data.min()
-            data /= data.max()
+            data -= np.nanmin(data)
+            data /= np.nanmax(data)
         else:
-            dtypeInfo = np.iinfo(self._dataset.dtype)
-            data -= dtypeInfo.min
+            dtypeInfo: Union[np.finfo, np.iinfo]
+            if np.issubdtype(self._dataset.dtype, np.floating):
+                dtypeInfo = np.finfo(self._dataset.dtype)
+            else:
+                dtypeInfo = np.iinfo(self._dataset.dtype)
             data /= dtypeInfo.max
+            minByMax = dtypeInfo.min / dtypeInfo.max
+            data -= minByMax
+            data /= 1 - minByMax
         data = (data * 255).copy(order="C").astype(np.uint8)
         assert data.shape == (self._cols, self._rows)
         return QtGui.QImage(
