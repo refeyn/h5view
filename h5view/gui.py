@@ -58,7 +58,7 @@ class DatasetModel(QtCore.QAbstractTableModel):
         index: Union[QtCore.QModelIndex, QtCore.QPersistentModelIndex],
         role: int = cast(int, QtCore.Qt.DisplayRole),
     ) -> Any:
-        if not index.isValid():
+        if not index.isValid() or any(s == 0 for s in self._dataset.shape):
             return None
         if role == QtCore.Qt.DisplayRole:
             didx = self._region + (index.row(), index.column())
@@ -122,6 +122,8 @@ class PixmapWidget(QtWidgets.QWidget):
             and self._region is not None
             and self._dataset is not None
         )
+        if any(s == 0 for s in self._dataset.shape):
+            return QtGui.QImage()
         data: np.ndarray = self._dataset[self._region].astype(float)
         if self._autoscale:
             data -= np.nanmin(data)
