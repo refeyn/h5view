@@ -2,6 +2,7 @@ import os
 from typing import List, Optional, Union, cast
 
 import h5py
+import hdf5plugin  # pylint: disable=unused-import
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from h5view import gui, utils

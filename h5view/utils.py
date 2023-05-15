@@ -63,4 +63,5 @@ def metadataFor(obj: Union[h5py.Group, h5py.Dataset]) -> Mapping[str, Any]:
             "Chunk shape": obj.chunks,
             "Compression": obj.compression,
             "Compression opts": obj.compression_opts,
+            "Filters": str(obj._filters),
         }
