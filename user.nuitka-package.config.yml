@@ -1,0 +1,10 @@
+- module-name: 'hdf5plugin'
+  dlls:
+    - from_filenames:
+        relative_path: 'plugins'
+        prefixes:
+          - 'lib'
+        suffixes:
+          - 'dll'
+      when: 'win32'
+      dest_path: 'hdf5plugin/plugins'
