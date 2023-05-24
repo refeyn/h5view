@@ -10,8 +10,6 @@ from h5view import utils
 
 
 class DatasetModel(QtCore.QAbstractTableModel):
-    dataChanged: QtCore.Signal
-
     def __init__(self, dataset: h5py.Dataset):
         super().__init__()
         self._dataset = dataset
@@ -56,11 +54,11 @@ class DatasetModel(QtCore.QAbstractTableModel):
     def data(
         self,
         index: Union[QtCore.QModelIndex, QtCore.QPersistentModelIndex],
-        role: int = cast(int, QtCore.Qt.DisplayRole),
+        role: int = cast(int, QtCore.Qt.ItemDataRole.DisplayRole),
     ) -> Any:
         if not index.isValid() or any(s == 0 for s in self._dataset.shape):
             return None
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             didx = self._region + (index.row(), index.column())
             return utils.formatAsStr(self._dataset[didx[: self._dataset.ndim]])
 
@@ -90,7 +88,9 @@ class PixmapWidget(QtWidgets.QWidget):
         image = self.getImage()
         painter = QtGui.QPainter(self)
         imageRect = QtCore.QRect()
-        imageRect.setSize(image.size().scaled(self.size(), QtCore.Qt.KeepAspectRatio))
+        imageRect.setSize(
+            image.size().scaled(self.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)
+        )
         imageRect.moveCenter(QtCore.QPoint(self.width() // 2, self.height() // 2))
         painter.drawImage(imageRect, image)
 
@@ -145,7 +145,7 @@ class PixmapWidget(QtWidgets.QWidget):
             self._rows,
             self._cols,
             self._rows,
-            QtGui.QImage.Format_Grayscale8,
+            QtGui.QImage.Format.Format_Grayscale8,
         )
 
 

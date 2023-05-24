@@ -9,7 +9,7 @@ from h5view import gui, utils
 from h5view.ui.app import Ui_MainWindow
 
 
-class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, parent: Optional[QtWidgets.QWidget]) -> None:
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -72,7 +72,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._recursivePopulate(self._h5file, model.invisibleRootItem())
         self.treeView.setModel(model)
         self.treeView.selectionModel().select(
-            model.index(0, 0), QtCore.QItemSelectionModel.SelectCurrent
+            model.index(0, 0), QtCore.QItemSelectionModel.SelectionFlag.SelectCurrent
         )
         self.treeView.selectionModel().currentChanged.connect(self._onShowIndex)
         self._showIndex(model.index(0, 0))
@@ -82,12 +82,13 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         group_or_dataset: Union[h5py.Group, h5py.Dataset],
         item: QtGui.QStandardItem,
     ) -> None:
-        item.setData(group_or_dataset, cast(int, QtCore.Qt.UserRole))
+        item.setData(group_or_dataset, cast(int, QtCore.Qt.ItemDataRole.UserRole))
         if isinstance(group_or_dataset, h5py.Group):
             for name, sub_grp_or_ds in group_or_dataset.items():
                 subitem = QtGui.QStandardItem(name)
                 subitem.setFlags(
-                    subitem.flags() & ~QtCore.Qt.ItemIsEditable  # type:ignore[operator]
+                    subitem.flags()
+                    & ~QtCore.Qt.ItemFlag.ItemIsEditable  # type:ignore[operator]
                 )
                 self._recursivePopulate(sub_grp_or_ds, subitem)
                 item.appendRow(subitem)
@@ -97,7 +98,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             raise RuntimeError()
 
     def _showIndex(self, idx: QtCore.QModelIndex) -> None:
-        group_or_dataset = idx.data(cast(int, QtCore.Qt.UserRole))
+        group_or_dataset = idx.data(cast(int, QtCore.Qt.ItemDataRole.UserRole))
         self.pathLabel.setText(group_or_dataset.name)
 
         attrModel = QtGui.QStandardItemModel()
@@ -173,7 +174,7 @@ class H5ViewWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         while len(self._regionSpins) < regionSpins:
             sizePolicy = QtWidgets.QSizePolicy(
-                QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+                QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed
             )
             label = QtWidgets.QLabel(f"Dim {len(self._regionSpins)}")
             label.setSizePolicy(sizePolicy)
