@@ -28,17 +28,13 @@ jobs:
           cache-dependency-path: "./requirements.txt"
 
       - name: Setup env
-        run: .\setup_venv.ps1
+        run: pip install -r requirements.txt
 
       - name: Run linting on all files
-        run: |
-          .\activate_venv.ps1
-          pre-commit run --all-files --show-diff-on-failure
+        run: pre-commit run --all-files --show-diff-on-failure
 
       - name: Build wheel
-        run: |
-          .\activate_venv.ps1
-          python -m build
+        run: python -m build
 
       - uses: actions/upload-artifact@v4
         with:
