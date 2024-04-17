@@ -1,0 +1,77 @@
+name: Build, static analysis, tests & upload
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    tags:
+      - '*'
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build, static analysis & tests
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Use Python 3.10.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10.11"
+          architecture: "x64"
+          cache: "pip"
+          cache-dependency-path: "./requirements.txt"
+
+      - name: Setup env
+        run: .\setup_venv.ps1
+
+      - name: Run linting on all files
+        run: |
+          .\activate_venv.ps1
+          pre-commit run --all-files --show-diff-on-failure
+
+      - name: Build wheel
+        run: |
+          .\activate_venv.ps1
+          python -m build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h5view-wheels
+          path: dist/*
+
+      - name: Build exe
+        run: ./build.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h5view-exe
+          path: h5view*.exe
+
+  upload-pypi:
+    name: Upload to PyPI
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/h5view
+    permissions:
+      id-token: write
+    concurrency:
+      group: "deploy-pypi"
+      cancel-in-progress: false
+    steps:
+      - name: "Download wheels"
+        uses: actions/download-artifact@v4
+        with:
+          name: h5view-wheels
+          path: dist
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
