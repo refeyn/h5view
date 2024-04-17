@@ -1,24 +1,31 @@
 fail_fast: true
 repos:
-  - repo: https://github.com/ambv/black
-    rev: "22.3.0"
-    hooks:
-      - id: black
-        language_version: python3.8
   - repo: local
     hooks:
-    - id: isort
-      name: isort (python)
-      entry: venv/Scripts/isort.exe
-      language: system
-      types: [python]
-    - id: pylint
-      name: pylint
-      entry: venv/Scripts/pylint.exe
-      language: system
-      types: [python]
-    - id: mypy
-      name: mypy
-      entry: venv/Scripts/mypy.exe --install-types --non-interactive
-      language: system
-      types: [python]
+      - id: licence-present
+        name: licence-present
+        entry: SPDX-License-Identifier
+        language: pygrep
+        args: [--negate]
+        files: "^(?!h5view/ui/).*\\.py$"
+      - id: black
+        name: black
+        entry: venv/Scripts/black.exe
+        language: system
+        files: "^(?!h5view/ui/).*\\.py$"
+      - id: isort
+        name: isort (python)
+        entry: venv/Scripts/isort.exe --settings-file pyproject.toml
+        language: system
+        files: "^(?!h5view/ui/).*\\.py$"
+      - id: pylint
+        name: pylint
+        entry: venv/Scripts/pylint.exe
+        language: system
+        files: "^(?!h5view/ui/).*\\.py$"
+      - id: mypy
+        name: mypy
+        entry: venv/Scripts/mypy.exe
+        language: system
+        files: "^(?!h5view/ui/).*\\.py$"
+        require_serial: true

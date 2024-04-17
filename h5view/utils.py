@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 Matthew Joyce and other h5view contributors
+# SPDX-License-Identifier: MIT
+
 from typing import Any, Mapping, Tuple, Union
 
 import h5py
@@ -63,5 +66,5 @@ def metadataFor(obj: Union[h5py.Group, h5py.Dataset]) -> Mapping[str, Any]:
             "Chunk shape": obj.chunks,
             "Compression": obj.compression,
             "Compression opts": obj.compression_opts,
-            "Filters": str(obj._filters),
+            "Filters": str(obj._filters),  # pylint: disable=protected-access
         }

@@ -1,12 +1,7 @@
-import sys
+# SPDX-FileCopyrightText: Copyright (c) 2024 Matthew Joyce and other h5view contributors
+# SPDX-License-Identifier: MIT
 
-from PySide6 import QtWidgets
+if __name__ == "__main__":
+    from . import main
 
-from h5view.app import H5ViewWindow
-
-app = QtWidgets.QApplication(sys.argv)
-mw = H5ViewWindow(None)
-mw.show()
-if len(sys.argv) > 1:
-    mw.open(sys.argv[1])
-app.exec()
+    main()

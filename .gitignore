@@ -1,5 +1,3 @@
-/venv/
-/.vscode/settings.json
-/.mypy_cache
+venv
+.mypy_cache
 __pycache__/
-ui/

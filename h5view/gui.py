@@ -1,6 +1,9 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 Matthew Joyce and other h5view contributors
+# SPDX-License-Identifier: MIT
+
 import math
 import random
-from typing import Any, List, Optional, Tuple, Union, cast
+from typing import Any, cast, List, Optional, Tuple, Union
 
 import h5py
 import numpy as np

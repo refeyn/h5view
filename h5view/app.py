@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 Matthew Joyce and other h5view contributors
+# SPDX-License-Identifier: MIT
+
 import os
-from typing import List, Optional, Union, cast
+from typing import cast, List, Optional, Union
 
 import h5py
 import hdf5plugin  # pylint: disable=unused-import
@@ -10,7 +13,7 @@ from h5view.ui.app import Ui_MainWindow
 
 
 class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
-    def __init__(self, parent: Optional[QtWidgets.QWidget]) -> None:
+    def __init__(self, parent: Optional[QtWidgets.QWidget] = None) -> None:
         super().__init__(parent=parent)
         self.setupUi(self)
         self._h5file: Optional[h5py.File] = None
@@ -42,7 +45,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         fname, _ = QtWidgets.QFileDialog.getOpenFileName(
             parent=self,
             dir=str(self._settings.value("openDir", ".")),
-            filter="H5 files (*.h5 *.mp *.mpr *.mp.af *.aflog);;All files (*)",
+            filter="All files (*);;H5 files (*.h5 *.hdf5)",
         )
         if fname:
             self.open(fname)
@@ -86,10 +89,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         if isinstance(group_or_dataset, h5py.Group):
             for name, sub_grp_or_ds in group_or_dataset.items():
                 subitem = QtGui.QStandardItem(name)
-                subitem.setFlags(
-                    subitem.flags()
-                    & ~QtCore.Qt.ItemFlag.ItemIsEditable  # type:ignore[operator]
-                )
+                subitem.setFlags(subitem.flags() & ~QtCore.Qt.ItemFlag.ItemIsEditable)
                 self._recursivePopulate(sub_grp_or_ds, subitem)
                 item.appendRow(subitem)
         elif isinstance(group_or_dataset, h5py.Dataset):
@@ -182,7 +182,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
 
             spin = QtWidgets.QSpinBox(self)
             spin.setSizePolicy(sizePolicy)
-            spin.valueChanged.connect(self._onRegionChanged)  # type: ignore[attr-defined]
+            spin.valueChanged.connect(self._onRegionChanged)
             self.spinContainer.layout().insertWidget(
                 len(self._regionSpins) * 2 + 1, spin
             )
