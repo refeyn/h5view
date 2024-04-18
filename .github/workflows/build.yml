@@ -10,8 +10,8 @@ on:
       - '*'
 
 jobs:
-  build:
-    name: Build, static analysis & tests
+  test_and_build_wheels:
+    name: Static analysis, tests and wheel build
     runs-on: windows-2022
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: "./requirements.txt"
 
       - name: Setup env
-        run: pip install -r requirements.txt
+        run: ./setup_venv.ps1
 
       - name: Run linting on all files
         run: pre-commit run --all-files --show-diff-on-failure
@@ -40,6 +40,27 @@ jobs:
         with:
           name: h5view-wheels
           path: dist/*
+
+  build:
+    name: Executable build
+    runs-on: windows-2022
+    needs: test_and_build_wheels
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: Use Python 3.10.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10.11"
+          architecture: "x64"
+          cache: "pip"
+          cache-dependency-path: "./requirements.txt"
+
+      - name: Setup env
+        run: pip install -r requirements.txt
 
       - uses: Nuitka/Nuitka-Action@main
         with:
