@@ -68,7 +68,9 @@ jobs:
           cache-dependency-path: "./requirements.txt"
 
       - name: Setup env
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install .
 
       - uses: Nuitka/Nuitka-Action@main
         with:
@@ -136,6 +138,11 @@ jobs:
           pattern: h5view-*-exe
           merge-multiple: true
           path: exes
+
+      - name: Zip MacOS bundle
+        run: |
+          cd exes
+          zip -r h5view.app.zip h5view.app
 
       - name: Release
         uses: softprops/action-gh-release@v2

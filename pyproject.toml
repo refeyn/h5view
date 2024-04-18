@@ -11,7 +11,16 @@ dependencies = ["PySide6", "numpy", "h5py", "hdf5plugin"]
 h5view = "h5view:main"
 
 [project.optional-dependencies]
-dev = ["pre-commit", "pylint", "mypy", "black", "isort", "pre-commit", "build"]
+dev = [
+    "pre-commit",
+    "pylint",
+    "mypy",
+    "black",
+    "isort",
+    "pre-commit",
+    "build",
+    "types-setuptools",
+]
 build = ["nuitka", "zstandard", "ordered-set"]
 
 [build-system]

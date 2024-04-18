@@ -36,3 +36,7 @@ Executable versions of this tool can be found under the releases tab on GitHub. 
 ## Build executable
 
  - Run `build.ps1`
+
+# Licence
+
+This app is licenced under the MIT licence. It depends on PySide6, which is licenced under the LGPL.

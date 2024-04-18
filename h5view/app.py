@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2024 Matthew Joyce and other h5view contributors
+# SPDX-FileCopyrightText: Copyright (c) 2024 Refeyn Ltd and other h5view contributors
 # SPDX-License-Identifier: MIT
 
 import os
@@ -8,6 +8,7 @@ import h5py
 import hdf5plugin  # pylint: disable=unused-import
 from PySide6 import QtCore, QtGui, QtWidgets
 
+import h5view
 from h5view import gui, utils
 from h5view.ui.app import Ui_MainWindow
 
@@ -34,6 +35,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.pathLabel.setText("No file loaded")
         self.copyPathButton.hide()
         self.typeLabel.setText("")
+        self.setWindowTitle(f"H5View {h5view.__version__}")
 
         self._connectSignals()
 
@@ -73,7 +75,9 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.critical(self, "Could not open file", str(e))
         else:
             self._populateTreeView()
-            self.setWindowTitle(f"H5View - {os.path.abspath(fname)}")
+            self.setWindowTitle(
+                f"H5View {h5view.__version__} - {os.path.abspath(fname)}"
+            )
 
     def _populateTreeView(self) -> None:
         model = QtGui.QStandardItemModel()
