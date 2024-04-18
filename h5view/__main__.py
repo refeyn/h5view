@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 if __name__ == "__main__":
-    from . import main
+    try:
+        from . import main
+    except ImportError:
+        from h5view import main
 
     main()
