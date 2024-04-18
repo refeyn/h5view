@@ -81,6 +81,7 @@ jobs:
           include-package: h5view
           user-package-configuration-file: user.nuitka-package.config.yml
           include-qt-plugins: sensible
+          macos-create-app-bundle: true
 
       - uses: actions/upload-artifact@v4
         with:
