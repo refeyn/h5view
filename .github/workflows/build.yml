@@ -121,7 +121,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     environment:
       name: github-release
-      url: https://github.com/refeyn/h5view
+      url: ${{ steps.deployment.outputs.url }}
     concurrency:
       group: "deploy-github"
       cancel-in-progress: false
@@ -150,3 +150,5 @@ jobs:
           files: |
             dist/*
             exes/*
+          generate_release_notes: true
+          id: deployment
