@@ -12,6 +12,8 @@ __version__ = "0.1.0a0"
 
 def main() -> None:
     app = QtWidgets.QApplication(sys.argv)
+    app.setOrganizationName("Refeyn Ltd")
+    app.setApplicationName("h5view")
     mw = H5ViewWindow()
     mw.show()
     if len(sys.argv) > 1:

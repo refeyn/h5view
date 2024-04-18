@@ -17,10 +17,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QGridLayout, QHBoxLayout,
-    QHeaderView, QLabel, QMainWindow, QPlainTextEdit,
-    QSizePolicy, QSpacerItem, QSplitter, QStatusBar,
-    QTabWidget, QTableView, QToolBar, QTreeView,
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHBoxLayout, QHeaderView,
+    QLabel, QMainWindow, QPlainTextEdit, QSizePolicy,
+    QSpacerItem, QSplitter, QStatusBar, QTabWidget,
+    QTableView, QToolBar, QToolButton, QTreeView,
     QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
@@ -60,39 +60,59 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(1)
         sizePolicy1.setHeightForWidth(self.rightPanels.sizePolicy().hasHeightForWidth())
         self.rightPanels.setSizePolicy(sizePolicy1)
-        self.gridLayout = QGridLayout(self.rightPanels)
-        self.gridLayout.setSpacing(6)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_6 = QVBoxLayout(self.rightPanels)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.pathLabel = QLabel(self.rightPanels)
         self.pathLabel.setObjectName(u"pathLabel")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.pathLabel.sizePolicy().hasHeightForWidth())
+        self.pathLabel.setSizePolicy(sizePolicy2)
 
-        self.gridLayout.addWidget(self.pathLabel, 0, 0, 1, 1)
+        self.horizontalLayout_2.addWidget(self.pathLabel)
+
+        self.copyPathButton = QToolButton(self.rightPanels)
+        self.copyPathButton.setObjectName(u"copyPathButton")
+        icon = QIcon(QIcon.fromTheme(u"edit-copy"))
+        self.copyPathButton.setIcon(icon)
+
+        self.horizontalLayout_2.addWidget(self.copyPathButton)
 
         self.typeLabel = QLabel(self.rightPanels)
         self.typeLabel.setObjectName(u"typeLabel")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.typeLabel.sizePolicy().hasHeightForWidth())
+        self.typeLabel.setSizePolicy(sizePolicy3)
         self.typeLabel.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.gridLayout.addWidget(self.typeLabel, 0, 1, 1, 1)
+        self.horizontalLayout_2.addWidget(self.typeLabel)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_2)
 
         self.tabWidget = QTabWidget(self.rightPanels)
         self.tabWidget.setObjectName(u"tabWidget")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy2.setHorizontalStretch(2)
-        sizePolicy2.setVerticalStretch(1)
-        sizePolicy2.setHeightForWidth(self.tabWidget.sizePolicy().hasHeightForWidth())
-        self.tabWidget.setSizePolicy(sizePolicy2)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy4.setHorizontalStretch(2)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.tabWidget.sizePolicy().hasHeightForWidth())
+        self.tabWidget.setSizePolicy(sizePolicy4)
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
         self.verticalLayout_4 = QVBoxLayout(self.tab)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.spinContainer = QWidget(self.tab)
         self.spinContainer.setObjectName(u"spinContainer")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.spinContainer.sizePolicy().hasHeightForWidth())
-        self.spinContainer.setSizePolicy(sizePolicy3)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.spinContainer.sizePolicy().hasHeightForWidth())
+        self.spinContainer.setSizePolicy(sizePolicy5)
         self.horizontalLayout = QHBoxLayout(self.spinContainer)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalSpacer = QSpacerItem(5, 5, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -104,11 +124,11 @@ class Ui_MainWindow(object):
 
         self.viewWidgetContainer = QWidget(self.tab)
         self.viewWidgetContainer.setObjectName(u"viewWidgetContainer")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.viewWidgetContainer.sizePolicy().hasHeightForWidth())
-        self.viewWidgetContainer.setSizePolicy(sizePolicy4)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(1)
+        sizePolicy6.setHeightForWidth(self.viewWidgetContainer.sizePolicy().hasHeightForWidth())
+        self.viewWidgetContainer.setSizePolicy(sizePolicy6)
         self.verticalLayout = QVBoxLayout(self.viewWidgetContainer)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -169,7 +189,7 @@ class Ui_MainWindow(object):
 
         self.tabWidget.addTab(self.tab_3, "")
 
-        self.gridLayout.addWidget(self.tabWidget, 2, 0, 1, 2)
+        self.verticalLayout_6.addWidget(self.tabWidget)
 
         self.splitter.addWidget(self.rightPanels)
 
@@ -203,6 +223,7 @@ class Ui_MainWindow(object):
         self.actionShow_Image.setText(QCoreApplication.translate("MainWindow", u"Show 2D as Image", None))
         self.actionAutoscale_Image.setText(QCoreApplication.translate("MainWindow", u"Autoscale Image", None))
         self.pathLabel.setText(QCoreApplication.translate("MainWindow", u"/x/y/z", None))
+        self.copyPathButton.setText(QCoreApplication.translate("MainWindow", u"copy", None))
         self.typeLabel.setText(QCoreApplication.translate("MainWindow", u"float", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Value", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Attributes", None))

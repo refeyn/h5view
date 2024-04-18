@@ -19,7 +19,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self._h5file: Optional[h5py.File] = None
         self._viewWidget: QtWidgets.QWidget = self.valueTableView
         self._regionSpins: List[QtWidgets.QSpinBox] = []
-        self._settings = QtCore.QSettings("Refeyn Ltd", "h5view")
+        self._settings = QtCore.QSettings()
 
         self.valueImageView = gui.PixmapWidget(self)
         self.valueImageView.setAutoscale(self.actionAutoscale_Image.isChecked())
@@ -32,6 +32,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.spinContainer.hide()
 
         self.pathLabel.setText("No file loaded")
+        self.copyPathButton.hide()
         self.typeLabel.setText("")
 
         self._connectSignals()
@@ -40,6 +41,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
         self.actionOpen.triggered.connect(self._onOpen)
         self.actionShow_Image.triggered.connect(self._onUpdateShowIndex)
         self.actionAutoscale_Image.toggled.connect(self.valueImageView.setAutoscale)
+        self.copyPathButton.clicked.connect(self._onCopyPathButtonClicked)
 
     def _onOpen(self) -> None:
         fname, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -59,6 +61,9 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
             and len(self.treeView.selectionModel().selectedIndexes()) > 0
         ):
             self._showIndex(self.treeView.selectionModel().selectedIndexes()[0])
+
+    def _onCopyPathButtonClicked(self) -> None:
+        QtWidgets.QApplication.clipboard().setText(self.pathLabel.text())
 
     def open(self, fname: Union[str, os.PathLike]) -> None:
         self._settings.setValue("openDir", str(os.path.dirname(fname)))
@@ -100,6 +105,7 @@ class H5ViewWindow(Ui_MainWindow, QtWidgets.QMainWindow):
     def _showIndex(self, idx: QtCore.QModelIndex) -> None:
         group_or_dataset = idx.data(cast(int, QtCore.Qt.ItemDataRole.UserRole))
         self.pathLabel.setText(group_or_dataset.name)
+        self.copyPathButton.show()
 
         attrModel = QtGui.QStandardItemModel()
         for i, (name, value) in enumerate(sorted(group_or_dataset.attrs.items())):
