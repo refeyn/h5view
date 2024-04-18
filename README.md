@@ -2,7 +2,7 @@
 
 _A small app for viewing h5 files in a simple and clean way_
 
-<p align="center"><img src="./docs/screenshots/img.png" width="40%"> <img src="./docs/screenshots/metadata.png" width="40%"></p>
+<p align="center"><img src="https://github.com/refeyn/h5view/assets/103422031/7687cfb1-12e3-4e1c-b6ff-c45456ef91b4" width="40%"> <img src="https://github.com/refeyn/h5view/assets/103422031/b3f326fb-6f09-4cc2-b5a1-6949130292b7" width="40%"></p>
 
 Features:
 
