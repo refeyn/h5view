@@ -31,10 +31,14 @@ jobs:
         run: ./setup_venv.ps1
 
       - name: Run linting on all files
-        run: pre-commit run --all-files --show-diff-on-failure
+        run: |
+          ./activate_venv.ps1
+          pre-commit run --all-files --show-diff-on-failure
 
       - name: Build wheel
-        run: python -m build
+        run: |
+          ./activate_venv.ps1
+          python -m build
 
       - uses: actions/upload-artifact@v4
         with:
