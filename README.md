@@ -7,11 +7,15 @@ _A small app for viewing h5 files in a simple and clean way_
 Features:
 
  - Can open and view datasets of any HDF5 files h5py can read
- - Navigate heiracical groups using a simple tree view
+ - Navigate hierarchical groups using a simple tree view
  - Can render >=1D data as tables
  - Can render >=2D data as images
  - Sensible display of strings and other 0D data
  - Displays dataset attributes and metadata (size, datatype, compression filters, etc.)
+
+# Installation
+
+Executable versions of this tool can be found under the releases tab on GitHub. Alternatively, h5view can be installed by pip (`pip install h5view`) and then run using the `h5view` command.
 
 # Development
 
