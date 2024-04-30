@@ -145,10 +145,10 @@ jobs:
           zip -r h5view.app.zip h5view.app
 
       - name: Release
+        id: deployment
         uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/*
             exes/*
           generate_release_notes: true
-          id: deployment
