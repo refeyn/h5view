@@ -76,12 +76,11 @@ jobs:
         with:
           nuitka-version: main
           script-name: h5view
-          onefile: true
+          mode: app
           enable-plugins: pyside6
           include-package: h5view
           user-package-configuration-file: user.nuitka-package.config.yml
           include-qt-plugins: sensible
-          macos-create-app-bundle: true
 
       - uses: actions/upload-artifact@v4
         with:
