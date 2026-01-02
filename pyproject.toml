@@ -7,6 +7,7 @@ authors = [{ name = "Matthew Joyce", email = "matthew.joyce@refeyn.com" }]
 dynamic = ["version"]
 dependencies = ["PySide6", "numpy", "h5py", "hdf5plugin"]
 keywords = ["hdf5", "h5py"]
+requires-python = ">= 3.8"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: X11 Applications :: Qt",

@@ -52,7 +52,9 @@ class DatasetModel(QtCore.QAbstractTableModel):
     def setRegion(self, region: Tuple[int, ...]) -> None:
         assert len(region) == len(self._region)
         self._region = region
-        self.dataChanged.emit(self.index(0, 0), self.index(self._rows, self._cols), [])
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self._rows - 1, self._cols - 1), []
+        )
 
     def data(
         self,

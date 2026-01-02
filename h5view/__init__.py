@@ -1,14 +1,14 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024 Refeyn Ltd and other h5view contributors
 # SPDX-License-Identifier: MIT
 
+import importlib.metadata
 import sys
 
-import pkg_resources
 from PySide6 import QtWidgets
 
 from h5view.app import H5ViewWindow
 
-__version__ = pkg_resources.get_distribution("h5view").version
+__version__ = importlib.metadata.version("h5view")
 
 
 def main() -> None:
