@@ -36,7 +36,6 @@ dev = [
     "isort",
     "pre-commit",
     "build",
-    "types-setuptools",
 ]
 build = ["nuitka", "zstandard", "ordered-set"]
 
