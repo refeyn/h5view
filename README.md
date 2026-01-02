@@ -15,7 +15,7 @@ Features:
 
 # Installation
 
-Executable versions of this tool can be found under the releases tab on GitHub. Alternatively, h5view can be installed by pip (`pip install h5view`) and then run using the `h5view` command.
+Executable versions of this tool can be found under the [releases tab on GitHub](https://github.com/refeyn/h5view/releases/tag/v0.1.0a1). Alternatively, h5view can be installed by pip (`pip install h5view`) and then run using the `h5view` command.
 
 # Development
 

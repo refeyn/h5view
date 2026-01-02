@@ -8,3 +8,8 @@
           - 'dll'
       when: 'win32'
       dest_path: 'hdf5plugin/plugins'
+
+- module-name: 'h5py._proxy'
+  implicit-imports:
+    - depends:
+        - 'h5py._npystrings'
